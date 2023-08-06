@@ -3,11 +3,17 @@ sequenceDiagram
     participant browser
     participant server
 
+    browser->>server: POST https://students.cs.helsenki.fi/exampleapp/new_note
+    activate server
+    Note right of browser: Data was entered in form area it's contained in request body and processed on the server and then add to the note array.
+    server-->>browser: Status Code: 302 Found
+    deactivate server
+    Note right of browser: This code tells to browser that resource has been moved to address specified at "Location" of header.
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
     activate server
-    server-->>browser: HTML document
+    Note right of browser: This method was called for reason of the status code is 302.
+    server->>browser: HTML document
     deactivate server
-
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
     activate server
     server-->>browser: the css file
