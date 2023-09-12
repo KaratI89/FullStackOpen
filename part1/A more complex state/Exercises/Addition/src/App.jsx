@@ -15,22 +15,33 @@ const App = () => {
     'Perfection (in design) is achieved not when there is nothing more to add, but rather when there is nothing more to take away'
   ]
   const [selected, setSelected] = useState(0)
+  const [ratings, setRatings] = useState(new Array(anecdotes.length).fill(0))
   const handleSelected = () => {
     const numberAnecdots = anecdotes.length
-    console.log(numberAnecdots)
     const getRandomInt = () => Math.floor(Math.random() * numberAnecdots)
     let int = 0
     do {
       int = getRandomInt()
     } while ( int === selected)
-    console.log(int)
     setSelected(int)
   }
   
+  const handleRatings = () => {
+    const copyRatings = [...ratings]
+    copyRatings[selected] += 1
+    setRatings(copyRatings)
+  }
+
+  const maxRatings = ratings.indexOf(Math.max(...ratings))
+
   return (
     <>
-    <Button handleClick = {() => handleSelected()} text = 'next anecdote' />
     <p> {anecdotes[selected]} </p>
+    <p> 'has {ratings[selected]} votes' </p>
+    <Button handleClick = {() => handleRatings()} text = 'vote' />
+    <Button handleClick = {() => handleSelected()} text = 'next anecdote' />
+    <h3>Anecdote with most votes</h3>
+    <p>{anecdotes[maxRatings]}</p>
     </>
   )
 }
