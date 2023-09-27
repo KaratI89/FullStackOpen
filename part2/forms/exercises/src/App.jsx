@@ -9,7 +9,14 @@ export const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
-    setPersons(persons.concat({ name: newName }))
+    let numb = persons.map(person => person.name).indexOf(newName)
+    console.log(numb);
+    if (numb === -1) {
+      setPersons(persons.concat({ name: newName })) 
+    }
+    else{
+      window.alert(`${newName} is already added to phonebook`)
+    }
     setNewName('')
     console.log('this is the form', event.target)
   }
