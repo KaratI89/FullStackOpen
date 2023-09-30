@@ -1,5 +1,5 @@
-export const Name = ({ name }) => {
+export const Person = ({ person }) => {
   return (
-    <li>{name.name}</li>
+    <li>{person.name} {person.number}</li>
   );
 };
