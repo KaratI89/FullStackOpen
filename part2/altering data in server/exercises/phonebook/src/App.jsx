@@ -6,8 +6,8 @@ import phonebookService from "./services/person"
 
 export const App = () => {
   const [people, setPeople] = useState([])
-  let [newName, setNewName] = useState('enter a new name')
-  let [newNumber, setNewNumber] = useState('enter a number')
+  const [newName, setNewName] = useState('enter a new name')
+  const [newNumber, setNewNumber] = useState('enter a number')
   const [filter, setFilter] = useState('')
 
   useEffect(() => {
@@ -52,10 +52,10 @@ export const App = () => {
   }
 
   const change = (id) => {
-    newName = people.find(person=>person.id === id).name
-    newNumber = people.find(person=>person.id === id).number
-    setNewName(newName)
-    setNewNumber(newNumber)
+    //newName = people.find(person=>person.id === id).name
+    //newNumber = people.find(person=>person.id === id).number
+    setNewName(people.find(person=>person.id === id).name)
+    setNewNumber(people.find(person=>person.id === id).number)
   }
 
   const handleNameChange = (event) => {
