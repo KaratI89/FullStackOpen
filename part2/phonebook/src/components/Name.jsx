@@ -1,5 +1,10 @@
-export const Person = ({ person }) => {
+export const Person = ({ person, deleteFunction, changeFunction }) => {
   return (
-    <li>{person.name} {person.number}</li>
-  );
-};
+    <li>
+      {person.name} {person.number} 
+      <button onClick={()=>deleteFunction(person.id)} >delete</button> 
+      <button onClick={()=>changeFunction(person.id)}>change</button>
+      </li>
+  )
+}
+/* */
