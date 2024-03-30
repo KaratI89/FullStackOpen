@@ -3,12 +3,15 @@ import { Person } from "./components/Name"
 import { Filter } from "./components/Filter"
 import { PersonForm } from "./components/PersonForm"
 import phonebookService from "./services/person"
+import { Notification } from "./components/Notification"
 
 export const App = () => {
   const [people, setPeople] = useState([])
   const [newName, setNewName] = useState('enter a new name')
   const [newNumber, setNewNumber] = useState('enter a number')
   const [filter, setFilter] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
+  const [noteMessage, setNoteMessage] = useState(null)
 
   useEffect(() => {
     phonebookService
@@ -25,7 +28,13 @@ export const App = () => {
     if (numb === -1 && !newName == "" && !newNumber == "") {
       phonebookService
       .create({name: newName, number: newNumber})
-      .then(returnedPerson => setPeople(people.concat(returnedPerson)))
+        .then(returnedPerson => {
+          setPeople(people.concat(returnedPerson))
+          setNoteMessage(`Created '${returnedPerson.name}'`)
+          setTimeout(() => {
+            setNoteMessage(null)
+        }, 5000)
+      })
     }
     else if (numb !== -1 && newNumber !== people.find(person=>person.name === newName).number){
       const changePerson = people.find(person=>person.name === newName)
@@ -34,7 +43,14 @@ export const App = () => {
         console.log(changedObject);
         phonebookService
           .personChange(changePerson.id, changedObject)
-          .then(changedObject=>setPeople(people.map(person=>person.id !== changePerson.id ? person : changedObject )))
+            .then(changedObject=>setPeople(people.map(person=>person.id !== changePerson.id ? person : changedObject )))
+            .catch(error => {
+              setErrorMessage(`Information of '${changePerson.name}' has already been remove from server`)
+              setTimeout(() => {
+                setErrorMessage(null)
+            }, 5000)
+            setPeople(people.filter(person => person.id !==changePerson.id))
+          })    
       }
     }
     else{
@@ -47,7 +63,16 @@ export const App = () => {
 
   const deletePerson = (id) => {
     if (window.confirm(`Do you realy want to dalate ${people.find(person=>person.id === id).name}`)){
-    phonebookService.personDelete(id).then(response=>{setPeople(people.filter(n=>n.id !== id))})
+    phonebookService
+    .personDelete(id)
+    .then(response=>{setPeople(people.filter(n=>n.id !== id))})
+    .catch(error => {
+      setErrorMessage(`Information of '${people.find(person=>person.id === id).name}' has already been remove from server`)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+      setPeople(people.filter(person => person.id !== id))
+    })
     }
   }
 
@@ -73,6 +98,8 @@ export const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification errMessage={errorMessage} />
+      <Notification noteMessage={noteMessage} />
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
       <h3>Add new adreses</h3>
       <PersonForm 
